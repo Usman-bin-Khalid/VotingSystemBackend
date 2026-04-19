@@ -1,0 +1,27 @@
+voting-system-backend/
+├── .env
+├── .gitignore
+├── package.json
+├── server.js
+├── config/
+│   ├── cloudinary.js
+│   └── db.js
+├── middleware/
+│   ├── auth.js
+│   ├── errorHandler.js
+│   └── upload.js
+├── models/
+│   ├── Candidate.js
+│   └── User.js
+├── routes/
+│   ├── authRoutes.js
+│   ├── candidateRoutes.js
+│   ├── voteRoutes.js
+│   └── profileRoutes.js
+├── controllers/
+│   ├── authController.js
+│   ├── candidateController.js
+│   ├── voteController.js
+│   └── profileController.js
+└── utils/
+    └── generateToken.js
