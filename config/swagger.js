@@ -11,12 +11,8 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:3000',
-                description: 'Local server',
-            },
-            {
-                url: 'https://votingsystembackend.onrender.com',
-                description: 'Production server',
+                url: '/',
+                description: 'Server',
             },
         ],
         components: {
