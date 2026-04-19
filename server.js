@@ -7,9 +7,18 @@ const voteRoutes = require('./routes/voteRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
+const cors = require('cors');
+const { swaggerUi, specs } = require('./config/swagger');
+
 connectDB();
 
 const app = express();
+
+// CORS
+app.use(cors());
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Body parser
 app.use(express.json());
