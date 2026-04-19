@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema(
             required: [true, 'CNIC is required'],
             unique: true,
         },
-        profileImage: {
+        profileimage: {
             type: String,
             default: '',
         },

@@ -20,95 +20,105 @@ const uploadToCloudinary = (buffer) => {
 // @desc    Register a new user
 // @route   POST /api/auth/signup
 // @access  Public
-const signup = async (req, res) => {
-    const {
-        name,
-        age,
-        email,
-        role,
-        mobile,
-        address,
-        salary,
-        username,
-        password,
-        cnic,
-    } = req.body;
+const signup = async (req, res, next) => {
+    try {
+        const {
+            name,
+            age,
+            email,
+            role,
+            mobile,
+            address,
+            salary,
+            username,
+            password,
+            cnic,
+        } = req.body;
 
-    // Check if user already exists
-    const userExists = await User.findOne({ $or: [{ email }, { username }, { cnic }] });
-    if (userExists) {
-        res.status(400);
-        throw new Error('User with this email, username or CNIC already exists');
-    }
-
-    let profileImageUrl = '';
-    if (req.file) {
-        try {
-            const result = await uploadToCloudinary(req.file.buffer);
-            profileImageUrl = result.secure_url;
-        } catch (error) {
-            res.status(500);
-            throw new Error('Image upload failed');
+        // Check if user already exists
+        const userExists = await User.findOne({ $or: [{ email }, { username }, { cnic }] });
+        if (userExists) {
+            return res.status(400).json({ message: 'User with this email, username or CNIC already exists' });
         }
-    }
 
-    const user = await User.create({
-        name,
-        age,
-        email,
-        role: role || 'voter',
-        mobile,
-        address,
-        salary,
-        username,
-        password,
-        cnic,
-        profileImage: profileImageUrl,
-    });
+        let profileImageUrl = '';
+        const uploadFile = req.file;
 
-    if (user) {
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            cnic: user.cnic,
-            profileImage: user.profileImage,
-            token: generateToken(user._id),
+        if (uploadFile) {
+            try {
+                const result = await uploadToCloudinary(uploadFile.buffer);
+                profileImageUrl = result.secure_url;
+            } catch (error) {
+                console.error('Cloudinary Upload Error:', error);
+                return res.status(500).json({
+                    message: 'Image upload failed',
+                    error: error
+                });
+            }
+        }
+
+        const user = await User.create({
+            name,
+            age,
+            email,
+            role: role || 'voter',
+            mobile,
+            address,
+            salary,
+            username,
+            password,
+            cnic,
+            profileimage: profileImageUrl,
         });
-    } else {
-        res.status(400);
-        throw new Error('Invalid user data');
+
+        if (user) {
+            res.status(201).json({
+                user,
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                cnic: user.cnic,
+                profileimage: user.profileimage,
+                token: generateToken(user._id),
+            });
+        } else {
+            res.status(400).json({ message: 'Invalid user data' });
+        }
+    } catch (error) {
+        next(error);
     }
 };
 
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
-const login = async (req, res) => {
-    const { cnic, password } = req.body;
+const login = async (req, res, next) => {
+    try {
+        const { cnic, password } = req.body;
 
-    const user = await User.findOne({ cnic });
-    if (!user) {
-        res.status(401);
-        throw new Error('Invalid CNIC or password');
+        const user = await User.findOne({ cnic });
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid CNIC or password' });
+        }
+
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid CNIC or password' });
+        }
+
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            cnic: user.cnic,
+            profileimage: user.profileimage,
+            token: generateToken(user._id),
+        });
+    } catch (error) {
+        next(error);
     }
-
-    const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-        res.status(401);
-        throw new Error('Invalid CNIC or password');
-    }
-
-    res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        cnic: user.cnic,
-        profileImage: user.profileImage,
-        token: generateToken(user._id),
-    });
 };
 
 module.exports = { signup, login };
