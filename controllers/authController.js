@@ -17,6 +17,9 @@ const uploadToCloudinary = (buffer) => {
     });
 };
 
+
+
+
 // @desc    Register a new user
 // @route   POST /api/auth/signup
 // @access  Public
@@ -74,12 +77,12 @@ const signup = async (req, res, next) => {
         if (user) {
             res.status(201).json({
                 user,
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                cnic: user.cnic,
-                profileimage: user.profileimage,
+                // _id: user._id,
+                // name: user.name,
+                // email: user.email,
+                // role: user.role,
+                // cnic: user.cnic,
+                // profileimage: user.profileimage,
                 token: generateToken(user._id),
             });
         } else {
@@ -89,6 +92,7 @@ const signup = async (req, res, next) => {
         next(error);
     }
 };
+
 
 // @desc    Login user
 // @route   POST /api/auth/login
@@ -110,9 +114,15 @@ const login = async (req, res, next) => {
         res.json({
             _id: user._id,
             name: user.name,
+            age: user.age,
             email: user.email,
             role: user.role,
+            mobile: user.mobile,
+            address: user.address,
+            salary: user.salary,
             cnic: user.cnic,
+            isVoted: user.isVoted,
+            votedForCandidate: user.votedForCandidate,
             profileimage: user.profileimage,
             token: generateToken(user._id),
         });

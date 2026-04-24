@@ -1,5 +1,6 @@
 const Candidate = require('../models/Candidate');
 
+
 // @desc    Create a new candidate (Admin only)
 // @route   POST /api/candidates
 // @access  Private/Admin
@@ -17,6 +18,7 @@ const createCandidate = async (req, res) => {
         party,
         age,
     });
+
 
     if (candidate) {
         res.status(201).json(candidate);

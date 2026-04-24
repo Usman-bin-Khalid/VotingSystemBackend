@@ -1,6 +1,8 @@
 const Candidate = require('../models/Candidate');
 const User = require('../models/User');
 
+
+
 // @desc    Cast a vote for a candidate
 // @route   POST /api/vote/:candidateId
 // @access  Private
@@ -67,6 +69,9 @@ const getResults = async (req, res) => {
     res.json(results);
 };
 
+
+
+
 // @desc    Get voters list for a candidate (Admin only)
 // @route   GET /api/admin/voters/:candidateId
 // @access  Private/Admin
@@ -97,5 +102,6 @@ const getVotersByCandidate = async (req, res) => {
         voters,
     });
 };
+
 
 module.exports = { castVote, getResults, getVotersByCandidate };
