@@ -32,6 +32,8 @@ const getProfile = async (req, res) => {
     res.json(user);
 };
 
+
+
 // @desc    Update user profile
 // @route   PUT /api/profile
 // @access  Private
@@ -44,6 +46,7 @@ const updateProfile = async (req, res, next) => {
         }
 
         const { name, username, age, mobile, address, salary } = req.body;
+
 
         // Update fields if provided
         if (name) user.name = name;

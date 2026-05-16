@@ -69,9 +69,6 @@ const getResults = async (req, res) => {
     res.json(results);
 };
 
-
-
-
 // @desc    Get voters list for a candidate (Admin only)
 // @route   GET /api/admin/voters/:candidateId
 // @access  Private/Admin
@@ -93,6 +90,7 @@ const getVotersByCandidate = async (req, res) => {
         profileImage: vote.user.profileImage,
         cnic: vote.user.cnic,
         votedAt: vote.votedAt,
+        voters
     }));
 
     res.json({
@@ -102,6 +100,9 @@ const getVotersByCandidate = async (req, res) => {
         voters,
     });
 };
+
+
+
 
 
 module.exports = { castVote, getResults, getVotersByCandidate };
